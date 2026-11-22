@@ -1,0 +1,4 @@
+pandas
+matplotlib
+inotify_simple
+pypdf

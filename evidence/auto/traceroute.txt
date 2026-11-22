@@ -1,0 +1,4 @@
+traceroute to mail.beta.test (10.10.2.25), 30 hops max, 60 byte packets
+ 1  10.10.1.1  0.116 ms  0.032 ms  0.119 ms
+ 2  10.10.0.2  0.057 ms  0.044 ms  0.022 ms
+ 3  10.10.2.25  0.088 ms  0.107 ms  0.233 ms

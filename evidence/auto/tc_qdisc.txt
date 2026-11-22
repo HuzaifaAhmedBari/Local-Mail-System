@@ -1,0 +1,6 @@
+r1 eth3
+qdisc noqueue 0: root refcnt 2 
+
+r2 eth2
+qdisc noqueue 0: root refcnt 2 
+

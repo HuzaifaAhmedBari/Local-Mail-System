@@ -1,0 +1,14 @@
+# versions.lock - generated 2026-11-22 14:59:52
+os=Ubuntu 24.04.5 LTS
+kernel=6.18.58.1-microsoft-standard-WSL2
+cpu=Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
+cpu_threads=8
+ram_gb=7.7
+python=3.12.3
+docker=Docker version 29.10.0, build fdd4b8e
+containerlab=0.83.0
+frr_image=quay.io/frrouting/frr:10.0.1
+frr_digest=quay.io/frrouting/frr@sha256:8ab9fe2ded0be732634bbd9a38e69c72ad450c7c9c41289b05a5ae7e26fdbe8b
+node_image=mail-lab/node:1.0
+node_image_id=sha256:f37d6ab7951d3a655514ea627ee286418b85d2096c64ebec09eb0999f210704c
+node_packages=dnsmasq=2.91-0ubuntu0.24.04.2 dovecot-core=1:2.3.21+dfsg1-2ubuntu6.5 opendkim=2.11.0~beta2-9build4 postfix=3.8.6-1ubuntu0.1 postfix-policyd-spf-python=3.0.4-2 python3-aiosmtpd=1.4.4.post2-1 swaks=20240103.0-1 unbound=1.19.2-1ubuntu3.12

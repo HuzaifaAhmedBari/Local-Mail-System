@@ -1,0 +1,13 @@
+variant,condition,mean,std,count,delivered_ratio
+baseline,rtt20,367.53,10.53,5,1.0
+baseline,rtt100,1701.47,740.52,5,1.0
+baseline,rtt200,4113.42,735.64,5,1.0
+cold,rtt20,415.44,124.53,5,1.0
+cold,rtt100,3082.97,1958.66,5,1.0
+cold,rtt200,5585.8,2174.3,5,1.0
+noauth,rtt20,269.27,40.05,5,1.0
+noauth,rtt100,1036.98,10.18,5,1.0
+noauth,rtt200,2685.35,134.48,5,1.0
+plain,rtt20,248.32,10.81,5,1.0
+plain,rtt100,535.85,95.82,5,1.0
+plain,rtt200,1921.56,692.29,5,1.0

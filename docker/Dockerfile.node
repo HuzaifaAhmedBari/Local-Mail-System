@@ -1,0 +1,29 @@
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo 'postfix postfix/main_mailer_type select Internet Site' | debconf-set-selections \
+ && echo 'postfix postfix/mailname string lab.test' | debconf-set-selections
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    postfix dovecot-core dovecot-imapd opendkim opendkim-tools postfix-policyd-spf-python \
+    dnsmasq unbound iproute2 iputils-ping traceroute dnsutils tcpdump swaks libnet-ssleay-perl \
+    openssl procps python3 python3-aiosmtpd ca-certificates less \
+    build-essential autoconf automake libtool pkg-config gettext libmilter-dev libssl-dev \
+    libbsd-dev zlib1g-dev curl \
+ && rm -rf /var/lib/apt/lists/*
+# Ubuntu's packaged OpenDKIM is linked with libunbound.  That resolver tries to
+# resolve the lab-only .test zone outside the lab DNS.  Build the same release
+# without Unbound so it uses the container's normal resolver (/etc/resolv.conf),
+# which points at the lab DNS cache.
+RUN set -eux; \
+    curl -fsSL https://github.com/trusteddomainproject/OpenDKIM/archive/refs/tags/rel-opendkim-2-11-0-Beta1.tar.gz -o /tmp/opendkim.tar.gz; \
+    mkdir -p /tmp/opendkim-src; \
+    tar -xzf /tmp/opendkim.tar.gz -C /tmp/opendkim-src --strip-components=1; \
+    cd /tmp/opendkim-src; \
+    autoreconf -fi; \
+    ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-unbound; \
+    make -j"$(nproc)"; \
+    make install; \
+    rm -rf /tmp/opendkim.tar.gz /tmp/opendkim-src
+RUN groupadd -g 2001 alice && groupadd -g 2002 bob \
+ && useradd -u 2001 -g 2001 -M -d /home/alice -s /bin/bash alice \
+ && useradd -u 2002 -g 2002 -M -d /home/bob -s /bin/bash bob
+CMD ["sleep","infinity"]

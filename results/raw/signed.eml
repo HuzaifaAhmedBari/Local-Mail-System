@@ -1,0 +1,54 @@
+Return-Path: <alice@alpha.test>
+X-Original-To: bob@beta.test
+Delivered-To: bob@beta.test
+Authentication-Results: mail.beta.test; spf=pass (sender SPF authorized) smtp.mailfrom=alpha.test (client-ip=10.10.1.25; helo=mail.alpha.test; envelope-from=alice@alpha.test; receiver=beta.test)
+Authentication-Results: mail.beta.test;
+	dkim=pass (2048-bit key) header.d=alpha.test header.i=@alpha.test header.a=rsa-sha256 header.s=mail header.b=TQ8C26sP
+Received: from mail.alpha.test (unknown [10.10.1.25])
+	by mail.beta.test (Postfix) with ESMTPS id 24E93B3B4
+	for <bob@beta.test>; Sun, 22 Nov 2026 08:25:59 +0000 (UTC)
+Received: from [172.31.31.3] (unknown [10.10.1.10])
+	by mail.alpha.test (Postfix) with ESMTPSA id D6205B3B2
+	for <bob@beta.test>; Sun, 22 Nov 2026 08:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpha.test; s=mail;
+	t=1795335958; bh=QfMmgLZsn8uedv/Lh4pslgM1JyDA1gL9uiOQEoi5Kx0=;
+	h=From:To:Subject;
+	b=TQ8C26sPTkf2HTu/I+CRWicwPQjTSpnW9Ag540JNvEfggWd+GAXXZrb7H7tYKx1SN
+	 McRO/DFqeHPKxESqceaqW6puI0n3TMWGFVZ8NdvnAebiFwVGEbwDJfLyJzOD0VUwfg
+	 Ca1NEspT0q4cWo6eXLPlUq9q0VHtf9a3pr24fs02lR62xMLvuj0YM2/k1OmYA4AIjU
+	 Ow3raH949vBCg8XQZF2xcXZjhdzoedOOJJiY7d7La6Py8Lv2XDWP7CjTrN6w/r8Kss
+	 5st4Gy4bI7mGbux4517PDNbUd/GCM1zSTvp/tyeTaPB8Ky+V203DmpfLD10SDVh+Bo
+	 tx9xoFU+5wuAg==
+From: alice@alpha.test
+To: bob@beta.test
+Subject: lab A3_5 0
+Message-ID: <A3_5-0-a70cd636@alpha.test>
+X-Run-Id: A3_5
+X-Send-Time: 1795335958875849898
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx

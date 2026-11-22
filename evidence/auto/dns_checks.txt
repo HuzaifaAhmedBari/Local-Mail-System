@@ -1,0 +1,30 @@
+$ dig +short MX beta.test
+10 mail.beta.test.
+20 mx2.beta.test.
+
+$ dig +short MX alpha.test
+10 mail.alpha.test.
+
+$ dig +short A mail.beta.test
+10.10.2.25
+
+$ dig +short A mx2.beta.test
+10.10.3.26
+
+$ dig +short A mail.alpha.test
+10.10.1.25
+
+$ dig +short TXT alpha.test
+"v=spf1 ip4:10.10.1.25 -all"
+
+$ dig +short TXT beta.test
+"v=spf1 ip4:10.10.2.25 ip4:10.10.3.26 -all"
+
+$ dig +short TXT soft.test
+"v=spf1 ~all"
+
+$ dig +short TXT none.test
+
+$ dig +short TXT mail._domainkey.alpha.test
+"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA04drDkFIY8u1g+eXZn+we6deSafEuY5Et80ldLN2AkeXdeU6ZemBIGvNcuxK5mpL+wbqKBFus7Jq3gQRshyXyDp6obSf11VsJgM0fpzJYOByNGfcnF5iMrsbiEjtjR/Fh8Ku8us1x3" "RRl4SHuKVLt9uqcwMaS5+CRMFPh4aAR3n6YavIx4aPlu9sSs5ZeBXzG2SBB5XNjcAXwLmBw9Ke+FYI0l/IFpJiHkpV0qK8WUBUkpgQEJ8i5X124gQOrNsg9nVaEvE9QDiz3Qg7v6cOdzCPIOC7QfaaVtghOb8CGfYsgU9NTfldBnn9J/kPPYbafsJpRLR4A7DU50WmJH" "8djQIDAQAB"
+

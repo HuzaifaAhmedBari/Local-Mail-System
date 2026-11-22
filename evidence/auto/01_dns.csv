@@ -1,0 +1,7 @@
+frame.number,frame.time_relative,ip.src,ip.dst,_ws.col.protocol,_ws.col.info
+"1","0.000000000","10.10.1.25","10.10.3.53","DNS","Standard query 0x17b4 MX beta.test OPT"
+"2","0.000491521","10.10.3.53","10.10.1.25","DNS","Standard query response 0x17b4 MX beta.test MX 20 mx2.beta.test MX 10 mail.beta.test A 10.10.3.26 A 10.10.2.25 OPT"
+"3","0.767879788","10.10.1.25","10.10.3.53","DNS","Standard query 0x49cf A mail.beta.test OPT"
+"4","0.768214847","10.10.3.53","10.10.1.25","DNS","Standard query response 0x49cf A mail.beta.test A 10.10.2.25 OPT"
+"5","1.599817659","10.10.1.25","10.10.3.53","DNS","Standard query 0xaa48 A mx2.beta.test OPT"
+"6","1.600143538","10.10.3.53","10.10.1.25","DNS","Standard query response 0xaa48 A mx2.beta.test A 10.10.3.26 OPT"

@@ -1,0 +1,35 @@
+all:
+  vars:
+    # The generated inventory is assumed to be used from the clab host.
+    # Hence no http proxy should be used. Therefore we make sure the http
+    # module does not attempt using any global http proxy.
+    ansible_httpapi_use_proxy: false
+  children:
+    bridge:
+      hosts:
+        clab-mail-br-alpha:
+          ansible_host: 
+        clab-mail-br-beta:
+          ansible_host: 
+        clab-mail-br-svc:
+          ansible_host: 
+    linux:
+      hosts:
+        clab-mail-alpha:
+          ansible_host: 172.31.31.4
+        clab-mail-attacker:
+          ansible_host: 172.31.31.5
+        clab-mail-beta:
+          ansible_host: 172.31.31.10
+        clab-mail-clienta:
+          ansible_host: 172.31.31.6
+        clab-mail-clientb:
+          ansible_host: 172.31.31.7
+        clab-mail-dns:
+          ansible_host: 172.31.31.2
+        clab-mail-mx2:
+          ansible_host: 172.31.31.8
+        clab-mail-r1:
+          ansible_host: 172.31.31.3
+        clab-mail-r2:
+          ansible_host: 172.31.31.9

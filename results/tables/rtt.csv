@@ -1,0 +1,13 @@
+variant,condition,rounds,session_mean_s,session_std_s,rounds_x_rtt_s
+tls_off_msgs1,rtt20,7.0,0.318,0.086,0.14
+tls_off_msgs1,rtt100,7.0,1.095,0.289,0.7
+tls_off_msgs1,rtt200,7.0,2.309,0.621,1.4
+tls_off_msgs5,rtt20,23.0,0.772,0.086,0.46
+tls_off_msgs5,rtt100,23.0,3.157,0.01,2.3
+tls_off_msgs5,rtt200,23.0,6.002,0.32,4.6
+tls_on_msgs1,rtt20,11.0,0.41,0.097,0.22
+tls_on_msgs1,rtt100,11.0,1.471,0.274,1.1
+tls_on_msgs1,rtt200,11.0,3.396,0.349,2.2
+tls_on_msgs5,rtt20,27.0,0.874,0.061,0.54
+tls_on_msgs5,rtt100,27.0,3.513,0.038,2.7
+tls_on_msgs5,rtt200,27.0,6.722,0.293,5.4

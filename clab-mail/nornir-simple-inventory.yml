@@ -1,0 +1,61 @@
+---
+br-alpha:
+    username: 
+    password: 
+    platform: bridge
+    hostname: 
+br-beta:
+    username: 
+    password: 
+    platform: bridge
+    hostname: 
+br-svc:
+    username: 
+    password: 
+    platform: bridge
+    hostname: 
+alpha:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.4
+attacker:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.5
+beta:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.10
+clienta:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.6
+clientb:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.7
+dns:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.2
+mx2:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.8
+r1:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.3
+r2:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.31.31.9

@@ -1,0 +1,93 @@
+
+======================================================================
+STEP 1: Routing: show ip route on both routers and a traceroute across them
+======================================================================
+Codes: K - kernel route, C - connected, L - local, S - static,
+       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+       f - OpenFabric, t - Table-Direct,
+       > - selected route, * - FIB route, q - queued, r - rejected, b - backup
+       t - trapped, o - offload failure
+
+K>* 0.0.0.0/0 [0/0] via 172.31.31.1, eth0, 07:50:48
+C>* 10.10.0.0/30 is directly connected, eth3, 07:50:43
+L>* 10.10.0.1/32 is directly connected, eth3, 07:50:43
+C>* 10.10.1.0/24 is directly connected, eth1, 07:50:43
+L>* 10.10.1.1/32 is directly connected, eth1, 07:50:43
+S>* 10.10.2.0/24 [1/0] via 10.10.0.2, eth3, weight 1, 07:50:43
+C>* 10.10.3.0/24 is directly connected, eth2, 07:50:43
+L>* 10.10.3.1/32 is directly connected, eth2, 07:50:43
+C>* 172.31.31.0/24 is directly connected, eth0, 07:50:48
+L>* 172.31.31.9/32 is directly connected, eth0, 07:50:48
+
+Codes: K - kernel route, C - connected, L - local, S - static,
+       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+       f - OpenFabric, t - Table-Direct,
+       > - selected route, * - FIB route, q - queued, r - rejected, b - backup
+       t - trapped, o - offload failure
+
+K>* 0.0.0.0/0 [0/0] via 172.31.31.1, eth0, 07:50:49
+C>* 10.10.0.0/30 is directly connected, eth2, 07:50:44
+L>* 10.10.0.2/32 is directly connected, eth2, 07:50:44
+S>* 10.10.1.0/24 [1/0] via 10.10.0.1, eth2, weight 1, 07:50:44
+C>* 10.10.2.0/24 is directly connected, eth1, 07:50:44
+L>* 10.10.2.1/32 is directly connected, eth1, 07:50:44
+S>* 10.10.3.0/24 [1/0] via 10.10.0.1, eth2, weight 1, 07:50:44
+C>* 172.31.31.0/24 is directly connected, eth0, 07:50:49
+L>* 172.31.31.10/32 is directly connected, eth0, 07:50:49
+
+traceroute to mail.beta.test (10.10.2.25), 30 hops max, 60 byte packets
+ 1  10.10.1.1  3.783 ms  3.576 ms  3.423 ms
+ 2  10.10.0.2  3.275 ms  3.143 ms  2.972 ms
+ 3  10.10.2.25  2.767 ms  2.406 ms  2.038 ms
+
+
+======================================================================
+STEP 2: alice sends to bob (submission 587, STARTTLS, DKIM signing, MX relay); bob reads over IMAP
+======================================================================
+delivered, latency 371.3 ms
+LIST [b'(\\HasNoChildren) "." INBOX']
+messages: 1
+Authentication-Results: mail.beta.test; spf=pass (sender SPF authorized) smtp.mailfrom=alpha.test (client-ip=10.10.1.25; helo=mail.alpha.test; envelope-from=alice@alpha.test; receiver=beta.test)
+Authentication-Results: mail.beta.test;
+	dkim=pass (2048-bit key) header.d=alpha.test header.i=@alpha.test header.a=rsa-sha256 header.s=mail header.b=rsRPggTx
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpha.test; s=mail;
+	t=1795333917; bh=QfMmgLZsn8uedv/Lh4pslgM1JyDA1gL9uiOQEoi5Kx0=;
+	h=From:To:Subject;
+	b=rsRPggTxWpp74ewGZl5U1Cn1qO/ZnUI2Zt1gy3kLGPcdsPz7EqOksqCZgbhpTiMBH
+	 lbxNn/8VRM+rn037wzaC35SbPEvsjeFyWMGpI0pXAOAnXex+tnI0Bo7AdnvPleRash
+	 q9l88av3R0t8rtqFd5vwUGQhYGks+B5TWcGROfjPvZ6NrB7f7QIoF0DHnGizaMPSYY
+	 KxLPYtoTtJAgE0snSBdTzhpAyOp3TyWUiXOTMwishqr0jotM10SzAHCAluW8THeUsu
+	 rDfbzCyajcKvVvmnmeUbkyky8n/VQ5SNcgSUVT6LMYnyRh+aXwtl7uiqyOcvDfXiYL
+	 nIKr35mxZ952A==
+Subject: lab D2 0
+FLAGS [b'1 (FLAGS (\\Seen \\Recent))']
+
+
+======================================================================
+STEP 3: Forged message from the attacker (10.10.3.66) claiming alice@alpha.test
+======================================================================
+verdict (spf, dkim): ('fail', 'none')  <- expect spf fail
+  Authentication-Results: mail.beta.test; spf=fail (SPF fail - not authorized) smtp.mailfrom=alpha.test (client-ip=10.10.3.66; helo=[172.31.31.7]; envelope-from=alice@alpha.test; receiver=beta.test)
+  Subject: forged demo3
+
+======================================================================
+STEP 4: Add 100 ms RTT on the transit link and send again
+======================================================================
+latency with 100 ms RTT: 1270.4 ms (no delay: 371.3 ms)
+
+======================================================================
+STEP 5: Saved packet traces
+======================================================================
+  captures/01_dns.pcapng  (run make capture)
+  captures/02_smtp_plain.pcapng  (run make capture)
+  captures/03_smtp_starttls.pcapng  (run make capture)
+  captures/04_imap.pcapng  (run make capture)
+  captures/05_spf_dkim.pcapng  (run make capture)
+Open one with: wireshark captures/03_smtp_starttls.pcapng
+
+======================================================================
+STEP 6: Clean up
+======================================================================
+network conditions cleared; demo log saved to evidence/auto/demo_run.txt
