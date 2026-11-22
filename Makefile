@@ -2,14 +2,14 @@ include config.env
 export
 .RECIPEPREFIX := >
 PY=sudo -E venv/bin/python
-CTL=$(PY) tools/labctl.py
+CTL=$(PY) tools/lab.py
 
 .PHONY: doctor build up down test demo experiments tables capture evidence check package hostaccess scaffold
 
 doctor:
-> sudo -E python3 tools/labctl.py doctor
+> sudo -E python3 tools/lab.py doctor
 build:
-> python3 tools/labctl.py build
+> python3 tools/lab.py build
 up:
 > $(CTL) up
 down:
@@ -29,8 +29,8 @@ evidence:
 hostaccess:
 > $(CTL) hostaccess
 scaffold:
-> python3 tools/labctl.py scaffold
+> python3 tools/lab.py scaffold
 check:
-> venv/bin/python tools/labctl.py check
+> venv/bin/python tools/lab.py check
 package:
-> $(PY) tools/labctl.py package
+> $(PY) tools/lab.py package
