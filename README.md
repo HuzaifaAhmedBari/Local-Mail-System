@@ -16,7 +16,7 @@ first build, sudo. The kernel must support tc netem and tbf. The repo path must 
     sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark
     sudo usermod -aG docker,wireshark $USER      # then log out and back in
     curl -sL https://get.containerlab.dev | sudo bash
-    python3 tools/labctl.py build                # venv, node image, FRR image
+    python3 tools/lab.py build                   # venv, node image, FRR image
 
 ## 4. Bring the lab up
     make doctor && make build && make up
@@ -28,7 +28,7 @@ make check, make package. make down stops everything.
 
 ## 5. Run the POC
     make demo      # expected: spf=pass and dkim=pass for alice to bob; spf=fail for the forged mail
-For Thunderbird: sudo -E venv/bin/python tools/labctl.py hostaccess, import build/pki/ca.crt, then
+For Thunderbird: sudo -E venv/bin/python tools/lab.py hostaccess, import build/pki/ca.crt, then
 configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail.beta.test, IMAP 143).
 
 ## 6. Reproduce the experiments
@@ -40,7 +40,7 @@ configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail
     make evidence       # routing tables, traceroute, logs, headers in evidence/auto/
 
 ## 8. Repository map
-tools/lab.py and tools/labctl.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
+tools/lab.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
 tools/make_tables.py, tools/mailclient.py, imapclient.py, spoof.py, sink.py, loadgen.py, watcher.py,
 parse_headers.py, rtt_count.py, socktest.py, nodes/start_node.py and nodes/ctl_node.py (run inside containers),
 docker/Dockerfile.node, topology.clab.yml, config.env. There are no shell scripts.

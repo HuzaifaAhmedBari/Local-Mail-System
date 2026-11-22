@@ -5,7 +5,7 @@ Standard library only, so `make doctor` works with the system python3 and
 `make check` works without root. Anything that touches namespaces, bridges or
 containerlab calls need_root() first.
 """
-import base64, csv, glob, json, os, platform, re, shlex, shutil
+import argparse, base64, csv, glob, json, os, platform, re, shlex, shutil
 import subprocess as sp, signal, sys, time, zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,7 +45,7 @@ PCAPS = ['01_dns', '02_smtp_plain', '03_smtp_starttls', '04_imap', '05_spf_dkim'
 # --------------------------------------------------------------------------
 def need_root():
     if os.geteuid() != 0:
-        sys.exit('This command needs root: use make, or sudo -E venv/bin/python tools/labctl.py <command>')
+        sys.exit('This command needs root: use make, or sudo -E venv/bin/python tools/lab.py <command>')
 
 
 def sh(cmd, check=True, input=None, timeout=None):
@@ -805,7 +805,7 @@ first build, sudo. The kernel must support tc netem and tbf. The repo path must 
     sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark
     sudo usermod -aG docker,wireshark $USER      # then log out and back in
     curl -sL https://get.containerlab.dev -o clab_install.sh && sudo bash clab_install.sh
-    python3 tools/labctl.py build                # venv, node image, FRR image
+    python3 tools/lab.py build                   # venv, node image, FRR image
 
 ## 4. Bring the lab up
     make doctor && make build && make up
@@ -817,7 +817,7 @@ make check, make package. make down stops everything.
 
 ## 5. Run the POC
     make demo      # expected: spf=pass and dkim=pass for alice to bob; spf=fail for the forged mail
-For Thunderbird: sudo -E venv/bin/python tools/labctl.py hostaccess, import build/pki/ca.crt, then
+For Thunderbird: sudo -E venv/bin/python tools/lab.py hostaccess, import build/pki/ca.crt, then
 configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail.beta.test, IMAP 143).
 
 ## 6. Reproduce the experiments
@@ -829,7 +829,7 @@ configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail
     make evidence       # routing tables, traceroute, logs, headers in evidence/auto/
 
 ## 8. Repository map
-tools/lab.py and tools/labctl.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
+tools/lab.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
 tools/make_tables.py, tools/mailclient.py, imapclient.py, spoof.py, sink.py, loadgen.py, watcher.py,
 parse_headers.py, rtt_count.py, socktest.py, nodes/start_node.py and nodes/ctl_node.py (run inside containers),
 docker/Dockerfile.node, topology.clab.yml, config.env. There are no shell scripts.
@@ -851,7 +851,7 @@ Group [fill in]. Written by [fill in].
 
 ## 2. What each tool was used for
 [fill in: planning, drafting configuration and scripts, debugging, report drafting - list only what really happened]
-The implementation guide and the Python control tools (tools/lab.py, labctl.py, stagetests.py, socktest.py,
+The implementation guide and the Python control tools (tools/lab.py, stagetests.py, socktest.py,
 nodes/ctl_node.py) were drafted with AI assistance.
 
 ## 3. My own work
@@ -901,7 +901,7 @@ def check():
               'results/summary.md', 'docker/Dockerfile.node', 'nodes/start_node.py', 'nodes/ctl_node.py',
               'evidence/auto/demo_run.txt'):
         rep('OK' if os.path.exists(P(f)) else 'MISS', f)
-    for f in ('lab', 'labctl', 'stagetests', 'socktest', 'mailclient', 'imapclient', 'watcher', 'spoof', 'sink',
+    for f in ('lab', 'stagetests', 'socktest', 'mailclient', 'imapclient', 'watcher', 'spoof', 'sink',
               'loadgen', 'parse_headers', 'rtt_count', 'orchestrate', 'make_tables'):
         rep('OK' if os.path.exists(P('tools', f + '.py')) else 'MISS', 'tools/%s.py' % f)
     scripts = [f for f in glob.glob(P('**/*.sh'), recursive=True) if '/venv/' not in f and '/build/' not in f]
@@ -969,3 +969,63 @@ __all__ = ['ENV', 'LAB', 'ROOT', 'P', 'sh', 'stream', 'x', 'd', 'pw', 'ns', 'ctl
            'gen', 'maildirs', 'reset', 'queue_len', 'set_tls', 'set_auth', 'set_selector', 'flush_dns',
            'prime_dns', 'condition', 'clear', 'up', 'down', 'build', 'doctor', 'pin_versions', 'host_access',
            'captures', 'evidence', 'demo', 'scaffold', 'check', 'package', 'fix_owner', 'ensure_netns', 'need_root']
+
+
+def main():
+    """Single Python command-line entry point for all lab control actions."""
+    ap = argparse.ArgumentParser(description='Local Mail System lab controller')
+    sub = ap.add_subparsers(dest='cmd', required=True)
+    simple = {
+        'doctor': 'check the host', 'build': 'build the environment', 'up': 'start the lab',
+        'down': 'stop the lab', 'capture': 'create packet captures', 'evidence': 'write evidence',
+        'check': 'check submission completeness', 'package': 'create the submission zip',
+        'reset': 'reset queues and mailboxes', 'flush-dns': 'clear DNS caches',
+        'prime-dns': 'warm DNS caches', 'hostaccess': 'configure host access',
+        'clear': 'remove network conditions', 'chown': 'restore output ownership',
+        'pin': 'write dependency versions', 'scaffold': 'create templates',
+    }
+    for name, helptext in simple.items():
+        sub.add_parser(name, help=helptext)
+    p = sub.add_parser('demo', help='run the live demo')
+    p.add_argument('--auto', action='store_true')
+    p = sub.add_parser('tls', help='turn TLS on or off')
+    p.add_argument('mode', choices=['on', 'off'])
+    p = sub.add_parser('auth', help='turn beta authentication checks on or off')
+    p.add_argument('mode', choices=['on', 'off'])
+    p = sub.add_parser('selector', help='choose alpha DKIM selector')
+    p.add_argument('name', choices=['bad', 'mail'])
+    p = sub.add_parser('cond', help='apply RTT/loss/rate conditions')
+    p.add_argument('rtt', type=float)
+    p.add_argument('loss', type=float)
+    p.add_argument('rate', type=float, nargs='?')
+    a = ap.parse_args()
+    root_cmds = set(simple) - {'doctor', 'build', 'check'} | {'demo', 'tls', 'auth', 'selector', 'cond'}
+    if a.cmd in root_cmds:
+        need_root()
+    if a.cmd == 'doctor':
+        return 0 if doctor() else 1
+    if a.cmd == 'check':
+        return 0 if check() else 1
+    actions = {'build': build, 'up': up, 'down': down, 'capture': captures, 'evidence': evidence,
+               'package': package, 'reset': reset, 'flush-dns': flush_dns, 'prime-dns': prime_dns,
+               'hostaccess': host_access, 'clear': clear, 'chown': fix_owner, 'pin': pin_versions,
+               'scaffold': scaffold}
+    if a.cmd in actions:
+        actions[a.cmd]()
+    elif a.cmd == 'demo':
+        demo(a.auto)
+    elif a.cmd == 'tls':
+        set_tls(a.mode)
+    elif a.cmd == 'auth':
+        set_auth(a.mode)
+    elif a.cmd == 'selector':
+        set_selector(a.name)
+    elif a.cmd == 'cond':
+        condition(a.rtt, a.loss, a.rate)
+        print('condition applied: RTT %g ms, loss %g%% each way%s' %
+              (a.rtt, a.loss, ', rate %g Mbit' % a.rate if a.rate else ''))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
