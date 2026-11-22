@@ -1,53 +1,95 @@
-# Local Mail System (CS3001 Computer Networks, Fall 2026)
+# Local Mail System
 
-Individual project by Huzai. The implementation, experiments, captures and validation were completed in WSL Ubuntu.
+This computer-networks project runs a two-domain mail network in WSL 2 Ubuntu with Docker Engine and Containerlab. It includes DNS, Postfix, Dovecot, OpenDKIM, SPF, two FRRouting routers, network impairments, experiments, captures and evidence.
 
-## 1. Overview
-Two mail domains (alpha.test, beta.test) with their own DNS (dnsmasq), Postfix, Dovecot, OpenDKIM and SPF,
-two FRRouting routers (containerlab), tc netem/tbf impairments, Python tools, tshark captures and experiments.
-Architecture diagram: docs/architecture.png. Proposal: docs/proposal.pdf. Report: docs/report/report.pdf.
+The steps below describe the WSL Ubuntu setup that was used successfully.
 
-## 2. Requirements
-Ubuntu 22.04/24.04 (native or VM, not stock WSL), 8 GB RAM (16 recommended), 20 GB disk, internet for the
-first build, sudo. The kernel must support tc netem and tbf. The repo path must contain no spaces.
+## 1. Install WSL Ubuntu
 
-## 3. One-time setup
-    sudo apt update
-    sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark
-    sudo usermod -aG docker,wireshark $USER      # then log out and back in
-    curl -sL https://get.containerlab.dev | sudo bash
-    python3 tools/lab.py build                   # venv, node image, FRR image
+In Windows PowerShell, if needed, run `wsl --install -d Ubuntu-24.04` and `wsl --update`. Open Ubuntu and confirm WSL 2 with `uname -a`.
 
-## 4. Bring the lab up
-    make doctor && make build && make up
-    make test            # stage tests: network, sockets, dns, mail, tls, auth (all must PASS)
+Keep the project on the Linux filesystem, for example `/home/<user>/local-mail-system`, not under `/mnt/c`. Avoid spaces in the path.
 
-Typical order for a full run: make up, make test, make demo, make capture, make evidence, make experiments,
-make tables, then the manual work (screenshots, diagram, report), make scaffold if README/disclosure are missing,
-make check, make package. make down stops everything.
+## 2. Install Docker inside WSL
 
-## 5. Run the POC
-    make demo      # expected: spf=pass and dkim=pass for alice to bob; spf=fail for the forged mail
-For Thunderbird: sudo -E venv/bin/python tools/lab.py hostaccess, import build/pki/ca.crt, then
-configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail.beta.test, IMAP 143).
+Docker Desktop on Windows is not required for this setup. Docker Engine runs inside Ubuntu WSL.
 
-## 6. Reproduce the experiments
-    make experiments    # 1 to 3 hours; or: sudo -E venv/bin/python tools/orchestrate.py latency|rtt|throughput|auth|quick
-    make tables         # CSVs in results/csv, tables in results/tables, graphs in results/graphs, results/summary.md
+Run: `sudo apt update`, `sudo apt install -y docker.io docker-compose-plugin`, `sudo service docker start`, and `sudo usermod -aG docker "$USER"`.
 
-## 7. Captures
-    make capture        # captures/*.pcapng, packet lists in evidence/auto/, key log in captures/keylogs/
-    make evidence       # routing tables, traceroute, logs, headers in evidence/auto/
+Close and reopen Ubuntu, then verify with `docker --version`, `docker info`, and `docker run --rm hello-world`. If Docker gives a permission error, reopen Ubuntu after the group change.
 
-## 8. Repository map
-tools/lab.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
-tools/make_tables.py, tools/mailclient.py, imapclient.py, spoof.py, sink.py, loadgen.py, watcher.py,
-parse_headers.py, rtt_count.py, socktest.py, nodes/start_node.py and nodes/ctl_node.py (run inside containers),
-docker/Dockerfile.node, topology.clab.yml, config.env. There are no shell scripts.
+## 3. Install dependencies
 
-## 9. Troubleshooting
-netem missing (use native Ubuntu or a VM), stale containers or bridges (make down), clock jumps (restart the lab),
-ports in use (make down), Thunderbird certificate errors (import build/pki/ca.crt; use host names, not IPs).
+Run `sudo apt update` and:
 
-## 10. Team, contribution statement and AI use
-This individual project was implemented, tested and documented by Huzai. AI use is described in AI_DISCLOSURE.md.
+`sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential autoconf automake libtool pkg-config gettext libmilter-dev libssl-dev libbsd-dev zlib1g-dev python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark`
+
+Install Containerlab with `curl -sL https://get.containerlab.dev | sudo bash`, then verify with `containerlab version`.
+
+Enable packet capture with `sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap` and verify with `getcap /usr/bin/dumpcap`.
+
+## 4. Put the project in WSL
+
+Clone it with `cd ~`, `git clone https://github.com/HuzaifaAhmedBari/Local-Mail-System.git local-mail-system`, and `cd ~/local-mail-system`.
+
+For Windows editing, open the WSL copy directly with `code ~/local-mail-system`. If editing a Windows copy, copy changed files into WSL, for example `cp /mnt/c/Users/<windows-user>/local-mail-system/README.md ~/local-mail-system/README.md`.
+
+## 5. Build and diagnose
+
+The main Python controller is `tools/lab.py`. Run `cd ~/local-mail-system`, `python3 tools/lab.py build`, and `make doctor`.
+
+`build` creates the virtual environment, installs requirements, builds the mail-node image and pulls the FRR image. `doctor` checks Docker, Containerlab, packet tools, `tc`, memory, disk and the Docker daemon.
+
+## 6. Start and test
+
+Run `make up`, then `make test`. Startup should end with `lab is up. Try: make demo`. Tests should end with `45/45 checks passed`.
+
+The tests cover routing, sockets, DNS, SMTP, backup MX, queues, TLS, SPF, DKIM signing, DKIM verification and replay handling.
+
+## 7. Demo and network conditions
+
+Run `make demo` to show authenticated submission, relay, delivery, SPF/DKIM results, latency and queue behavior.
+
+Apply 100 ms delay and 2% loss in each direction with `sudo -E venv/bin/python tools/lab.py cond 100 2`. Add a rate limit with `sudo -E venv/bin/python tools/lab.py cond 100 2 10`. Clear conditions with `sudo -E venv/bin/python tools/lab.py clear`.
+
+## 8. Experiments and tables
+
+Run `make experiments` and then `make tables`. The full experiments may take one to three hours.
+
+Individual groups are `sudo -E venv/bin/python tools/orchestrate.py latency`, `rtt`, `throughput`, or `auth`. Outputs are saved in `results/csv/`, `results/tables/`, `results/graphs/` and `results/summary.md`.
+
+## 9. Captures and evidence
+
+With the lab running, run `make capture` and `make evidence`.
+
+The five captures are saved in `captures/01_dns.pcapng`, `captures/02_smtp_plain.pcapng`, `captures/03_smtp_starttls.pcapng`, `captures/04_imap.pcapng`, and `captures/05_spf_dkim.pcapng`.
+
+The capture helper writes temporarily under `/tmp` because `dumpcap` runs as the `wireshark` user and may not be able to traverse `/home`; it copies completed files back into `captures/`. Text evidence is written to `evidence/auto/`, key logs to `captures/keylogs/`, and annotated images to `captures/screenshots/`.
+
+## 10. Validate and package
+
+Run `make check`. Successful output ends with `check: 0 MISS, 0 FAIL`.
+
+Run `make package` to create `/home/<user>/CN_Local_Mail_System_Submission.zip`. Copy it to Windows with `cp ../CN_Local_Mail_System_Submission.zip /mnt/c/Users/<windows-user>/Downloads/`.
+
+## 11. Stop and restart
+
+Stop the lab with `make down`. A clean restart is `make down`, `make up`, and `make test`.
+
+## 12. Troubleshooting
+
+For Docker permission errors, run `sudo service docker start`, ensure the user is in the `docker` group, and reopen Ubuntu.
+
+For missing `ensurepip`, run `sudo apt install -y python3-venv python3.12-venv`, `rm -rf venv`, and `python3 tools/lab.py build`.
+
+For empty captures, run `sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap`, `sudo ip netns exec clab-mail-r1 tshark -D`, `make down`, `make up`, and `make capture`.
+
+For DNS, routing or mail failures, run `make down`, `make up`, and `make test`. If Windows edits appear stale, edit the `/home` copy with VS Code or explicitly copy files from `/mnt/c`.
+
+## 13. Project map
+
+`tools/lab.py` is the main Python controller and CLI. `tools/stagetests.py` contains 45 behavioral tests. `tools/orchestrate.py` runs experiments. `tools/make_tables.py` creates tables and graphs. `tools/mailclient.py` is the timed SMTP client.
+
+`nodes/start_node.py` configures services inside containers. `nodes/ctl_node.py` controls runtime TLS, auth and selector changes. `docker/Dockerfile.node` builds the mail image. `topology.clab.yml` defines Containerlab. `config.env` stores addresses and constants.
+
+The Dockerfile and Containerlab YAML remain because they are native inputs to those systems. Operational control is Python through `tools/lab.py`.
