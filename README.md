@@ -6,7 +6,9 @@ The steps below describe the WSL Ubuntu setup that was used successfully.
 
 ## 1. Install WSL Ubuntu
 
-In Windows PowerShell, if needed, run `wsl --install -d Ubuntu-24.04` and `wsl --update`. Open Ubuntu and confirm WSL 2 with `uname -a`.
+In Windows PowerShell, if needed, run `wsl --install -d Ubuntu-24.04`, `wsl --update`, and `wsl --set-default-version 2`. Restart Windows if the installer requests it. Open Ubuntu and confirm WSL 2 with `uname -a`.
+
+If Ubuntu was already installed, list available distributions with `wsl --list --verbose`. The distribution used for this project was named `Ubuntu-24.04` and showed version `2`.
 
 Keep the project on the Linux filesystem, for example `/home/<user>/local-mail-system`, not under `/mnt/c`. Avoid spaces in the path.
 
@@ -16,7 +18,7 @@ Docker Desktop on Windows is not required for this setup. Docker Engine runs ins
 
 Run: `sudo apt update`, `sudo apt install -y docker.io docker-compose-plugin`, `sudo service docker start`, and `sudo usermod -aG docker "$USER"`.
 
-Close and reopen Ubuntu, then verify with `docker --version`, `docker info`, and `docker run --rm hello-world`. If Docker gives a permission error, reopen Ubuntu after the group change.
+Close and reopen Ubuntu, then verify with `docker --version`, `docker info`, and `docker run --rm hello-world`. If Docker gives a permission error, reopen Ubuntu after the group change. Docker may need to be started again after a Windows or WSL restart with `sudo service docker start`.
 
 ## 3. Install dependencies
 
@@ -93,3 +95,21 @@ For DNS, routing or mail failures, run `make down`, `make up`, and `make test`. 
 `nodes/start_node.py` configures services inside containers. `nodes/ctl_node.py` controls runtime TLS, auth and selector changes. `docker/Dockerfile.node` builds the mail image. `topology.clab.yml` defines Containerlab. `config.env` stores addresses and constants.
 
 The Dockerfile and Containerlab YAML remain because they are native inputs to those systems. Operational control is Python through `tools/lab.py`.
+
+## 14. Fresh-install command sequence
+
+For a new Ubuntu WSL installation, the shortest complete sequence is:
+
+1. Install Ubuntu 24.04 WSL 2 from PowerShell.
+2. Install Docker and add the user to the `docker` group.
+3. Reopen Ubuntu and start Docker.
+4. Install the dependency list and Containerlab.
+5. Set `dumpcap` capabilities.
+6. Clone the repository into `/home`.
+7. Run `python3 tools/lab.py build`.
+8. Run `make doctor`.
+9. Run `make up`.
+10. Run `make test` and confirm `45/45 checks passed`.
+
+After that, use `make demo`, `make experiments`, `make tables`, `make capture`,
+`make evidence`, `make check`, and `make package` as needed.
