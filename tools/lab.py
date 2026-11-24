@@ -830,7 +830,7 @@ configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail
 
 ## 8. Repository map
 tools/lab.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
-tools/make_tables.py, tools/mailclient.py, imapclient.py, spoof.py, sink.py, loadgen.py, watcher.py,
+tools/make_tables.py, tools/mailclient.py, imapclient.py, spoof.py, loadgen.py, watcher.py,
 parse_headers.py, rtt_count.py, socktest.py, nodes/start_node.py and nodes/ctl_node.py (run inside containers),
 docker/Dockerfile.node, topology.clab.yml, config.env. There are no shell scripts.
 
@@ -901,7 +901,7 @@ def check():
               'results/summary.md', 'docker/Dockerfile.node', 'nodes/start_node.py', 'nodes/ctl_node.py',
               'evidence/auto/demo_run.txt'):
         rep('OK' if os.path.exists(P(f)) else 'MISS', f)
-    for f in ('lab', 'stagetests', 'socktest', 'mailclient', 'imapclient', 'watcher', 'spoof', 'sink',
+    for f in ('lab', 'stagetests', 'socktest', 'mailclient', 'imapclient', 'watcher', 'spoof',
               'loadgen', 'parse_headers', 'rtt_count', 'orchestrate', 'make_tables'):
         rep('OK' if os.path.exists(P('tools', f + '.py')) else 'MISS', 'tools/%s.py' % f)
     scripts = [f for f in glob.glob(P('**/*.sh'), recursive=True) if '/venv/' not in f and '/build/' not in f]
