@@ -5,3 +5,8 @@ __pycache__/
 *.pyc
 !build/.gitkeep
 !data/.gitkeep
+
+clab-mail/
+captures/ns-test
+results/raw/*
+!results/raw/.gitkeep
