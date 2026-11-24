@@ -124,7 +124,7 @@ With the lab running, run `make capture` and `make evidence`.
 
 The five captures are saved in `captures/01_dns.pcapng`, `captures/02_smtp_plain.pcapng`, `captures/03_smtp_starttls.pcapng`, `captures/04_imap.pcapng`, and `captures/05_spf_dkim.pcapng`.
 
-The capture helper writes temporarily under `/tmp` because `dumpcap` runs as the `wireshark` user and may not be able to traverse `/home`; it copies completed files back into `captures/`. Text evidence is written to `evidence/`, key logs to `captures/keylogs/`, and annotated images to `captures/screenshots/`.
+The capture helper writes temporarily under `/tmp` because `dumpcap` runs as the `wireshark` user and may not be able to traverse `/home`; it copies completed files back into `captures/`. Text evidence is written to `evidence/`, and TLS key logs are written to `captures/keylogs/` for decrypting the captured STARTTLS session in Wireshark.
 
 ## 10. Validate and package
 

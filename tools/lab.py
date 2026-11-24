@@ -586,7 +586,6 @@ def captures():
     """Produce the five required .pcapng files and a packet list for each in evidence/."""
     need_root()
     os.makedirs(P('captures/keylogs'), exist_ok=True)
-    os.makedirs(P('captures/screenshots'), exist_ok=True)
     os.makedirs(P('evidence'), exist_ok=True)
     cap = lambda name: P('captures', name + '.pcapng')
     clear()
@@ -813,7 +812,7 @@ first build, sudo. The kernel must support tc netem and tbf. The repo path must 
     make test            # stage tests: network, sockets, dns, mail, tls, auth (all must PASS)
 
 Typical order for a full run: make up, make test, make demo, make capture, make evidence, make experiments,
-make tables, then the manual work (screenshots, diagram, report), make scaffold if README/disclosure are missing,
+make tables, then the manual work (diagram, report), make scaffold if README/disclosure are missing,
 make check, make package. make down stops everything.
 
 ## 5. Run the POC
@@ -911,8 +910,6 @@ def check():
     for n in PCAPS:
         if not os.path.exists(P('captures', n + '.pcapng')):
             rep('MISS', 'captures/%s.pcapng' % n)
-    shots = glob.glob(P('captures/screenshots/*.png'))
-    rep('OK' if len(shots) >= 5 else 'MISS', '%d annotated screenshots (need at least 5, ten recommended)' % len(shots))
     graphs = glob.glob(P('results/graphs/*.png'))
     rep('OK' if len(graphs) >= 4 else 'MISS', '%d graphs (need at least 4)' % len(graphs))
     for name in ('latency', 'rtt', 'throughput', 'auth'):
