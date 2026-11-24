@@ -1,0 +1,2 @@
+Authentication-Results: mail.beta.test; spf=none (no SPF record) smtp.mailfrom=none.test (client-ip=10.10.3.66; helo=[172.31.31.10]; envelope-from=x@none.test; receiver=beta.test)
+Subject: forged A6_1

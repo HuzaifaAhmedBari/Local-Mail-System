@@ -1,4 +1,0 @@
-Authentication-Results: mail.beta.test; spf=pass (sender SPF authorized) smtp.mailfrom=alpha.test (client-ip=10.10.1.25; helo=mail.alpha.test; envelope-from=alice@alpha.test; receiver=beta.test)
-Authentication-Results: mail.beta.test; dkim=pass (2048-bit key) header.d=alpha.test header.i=@alpha.test header.a=rsa-sha256 header.s=mail header.b=WUPG2ZkR
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpha.test; s=mail; t=1795341374; bh=QfMmgLZsn8uedv/Lh4pslgM1JyDA1gL9uiOQEoi5Kx0=; h=From:To:Subject; b=WUPG2ZkRVtQ2WA/l2roUW4yU6RmkOWgMZ/fNpNsdmiJfpjIsHqhJAuD0Ib+SBBY4W fniyJ7Hs4CTy6ItjWPA7rMMeeduqGDD+TZo3Ro1BQ/rSWD2Dogwnx62g9ls4o1YPee j3ljTxb+cipXN2K0Bjmq+kYiz15HYfXyAfe/KMQ9wuZTkJKZOHRZfsY0tYMirMYR4D Zlj6964BduGOxozbMwxLQAPtqjLZTtDGriSr8QlNd+uPP++95bVeQbgonAhC9Vp8tR WXdyxlWo2KgywdgMV85fC1a+PIlYx7Tj2lg/PgsngfcgMCFlz4vb0kk321YiiDc5JJ E5X9Lbd0hBYow==
-Subject: lab C05 0

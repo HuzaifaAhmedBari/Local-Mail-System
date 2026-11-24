@@ -90,4 +90,4 @@ Open one with: wireshark captures/03_smtp_starttls.pcapng
 ======================================================================
 STEP 6: Clean up
 ======================================================================
-network conditions cleared; demo log saved to evidence/auto/demo_run.txt
+network conditions cleared; demo log saved to evidence/demo_run.txt

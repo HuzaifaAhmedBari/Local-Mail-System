@@ -1,6 +1,6 @@
 $ dig +short MX beta.test
-10 mail.beta.test.
 20 mx2.beta.test.
+10 mail.beta.test.
 
 $ dig +short MX alpha.test
 10 mail.alpha.test.
