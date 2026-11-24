@@ -16,49 +16,107 @@ Keep the project on the Linux filesystem, for example `/home/<user>/local-mail-s
 
 Docker Desktop on Windows is not required for this setup. Docker Engine runs inside Ubuntu WSL.
 
-Run: `sudo apt update`, `sudo apt install -y docker.io docker-compose-plugin`, `sudo service docker start`, and `sudo usermod -aG docker "$USER"`.
+Run:
+
+```bash
+sudo apt update
+sudo apt install -y docker.io docker-compose-plugin
+sudo service docker start
+sudo usermod -aG docker "$USER"
+```
 
 Close and reopen Ubuntu, then verify with `docker --version`, `docker info`, and `docker run --rm hello-world`. If Docker gives a permission error, reopen Ubuntu after the group change. Docker may need to be started again after a Windows or WSL restart with `sudo service docker start`.
 
 ## 3. Install dependencies
 
-Run `sudo apt update` and:
+Run:
 
-`sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential autoconf automake libtool pkg-config gettext libmilter-dev libssl-dev libbsd-dev zlib1g-dev python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark`
+```bash
+sudo apt update
+sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential autoconf automake libtool pkg-config gettext libmilter-dev libssl-dev libbsd-dev zlib1g-dev python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark
+```
 
-Install Containerlab with `curl -sL https://get.containerlab.dev | sudo bash`, then verify with `containerlab version`.
+Install and verify Containerlab:
 
-Enable packet capture with `sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap` and verify with `getcap /usr/bin/dumpcap`.
+```bash
+curl -sL https://get.containerlab.dev | sudo bash
+containerlab version
+sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap
+getcap /usr/bin/dumpcap
+```
 
 ## 4. Put the project in WSL
 
-Clone it with `cd ~`, `git clone https://github.com/HuzaifaAhmedBari/Local-Mail-System.git local-mail-system`, and `cd ~/local-mail-system`.
+Clone the project:
+
+```bash
+cd ~
+git clone https://github.com/HuzaifaAhmedBari/Local-Mail-System.git local-mail-system
+cd ~/local-mail-system
+```
 
 For Windows editing, open the WSL copy directly with `code ~/local-mail-system`. If editing a Windows copy, copy changed files into WSL, for example `cp /mnt/c/Users/<windows-user>/local-mail-system/README.md ~/local-mail-system/README.md`.
 
 ## 5. Build and diagnose
 
-The main Python controller is `tools/lab.py`. Run `cd ~/local-mail-system`, `python3 tools/lab.py build`, and `make doctor`.
+The main Python controller is `tools/lab.py`. From the repository root, run:
+
+```bash
+cd ~/local-mail-system
+make build
+make doctor
+```
 
 `build` creates the virtual environment, installs requirements, builds the mail-node image and pulls the FRR image. `doctor` checks Docker, Containerlab, packet tools, `tc`, memory, disk and the Docker daemon.
 
 ## 6. Start and test
 
-Run `make up`, then `make test`. Startup should end with `lab is up. Try: make demo`. Tests should end with `45/45 checks passed`.
+Run:
+
+```bash
+make up
+make test
+```
+
+Startup should end with `lab is up. Try: make demo`. Tests should end with `45/45 checks passed`.
 
 The tests cover routing, sockets, DNS, SMTP, backup MX, queues, TLS, SPF, DKIM signing, DKIM verification and replay handling.
 
 ## 7. Demo and network conditions
 
-Run `make demo` to show authenticated submission, relay, delivery, SPF/DKIM results, latency and queue behavior.
+```bash
+make demo
+```
 
-Apply 100 ms delay and 2% loss in each direction with `sudo -E venv/bin/python tools/lab.py cond 100 2`. Add a rate limit with `sudo -E venv/bin/python tools/lab.py cond 100 2 10`. Clear conditions with `sudo -E venv/bin/python tools/lab.py clear`.
+This shows authenticated submission, relay, delivery, SPF/DKIM results, latency and queue behavior.
+
+There are no Make targets for arbitrary network conditions, so use the Python controller:
+
+```bash
+sudo -E venv/bin/python tools/lab.py cond 100 2
+sudo -E venv/bin/python tools/lab.py cond 100 2 10
+sudo -E venv/bin/python tools/lab.py clear
+```
 
 ## 8. Experiments and tables
 
-Run `make experiments` and then `make tables`. The full experiments may take one to three hours.
+```bash
+make experiments
+make tables
+```
 
-Individual groups are `sudo -E venv/bin/python tools/orchestrate.py latency`, `rtt`, `throughput`, or `auth`. Outputs are saved in `results/csv/`, `results/tables/`, `results/graphs/` and `results/summary.md`.
+The full experiments may take one to three hours.
+
+Individual experiment groups can be run separately:
+
+```bash
+sudo -E venv/bin/python tools/orchestrate.py latency
+sudo -E venv/bin/python tools/orchestrate.py rtt
+sudo -E venv/bin/python tools/orchestrate.py throughput
+sudo -E venv/bin/python tools/orchestrate.py auth
+```
+
+Outputs are saved in `results/csv/`, `results/tables/`, `results/graphs/` and `results/summary.md`.
 
 ## 9. Captures and evidence
 
@@ -66,27 +124,64 @@ With the lab running, run `make capture` and `make evidence`.
 
 The five captures are saved in `captures/01_dns.pcapng`, `captures/02_smtp_plain.pcapng`, `captures/03_smtp_starttls.pcapng`, `captures/04_imap.pcapng`, and `captures/05_spf_dkim.pcapng`.
 
-The capture helper writes temporarily under `/tmp` because `dumpcap` runs as the `wireshark` user and may not be able to traverse `/home`; it copies completed files back into `captures/`. Text evidence is written to `evidence/auto/`, key logs to `captures/keylogs/`, and annotated images to `captures/screenshots/`.
+The capture helper writes temporarily under `/tmp` because `dumpcap` runs as the `wireshark` user and may not be able to traverse `/home`; it copies completed files back into `captures/`. Text evidence is written to `evidence/`, key logs to `captures/keylogs/`, and annotated images to `captures/screenshots/`.
 
 ## 10. Validate and package
 
-Run `make check`. Successful output ends with `check: 0 MISS, 0 FAIL`.
+```bash
+make check
+```
 
-Run `make package` to create `/home/<user>/CN_Local_Mail_System_Submission.zip`. Copy it to Windows with `cp ../CN_Local_Mail_System_Submission.zip /mnt/c/Users/<windows-user>/Downloads/`.
+Successful output ends with `check: 0 MISS, 0 FAIL`.
+
+```bash
+make package
+cp ../CN_Local_Mail_System_Submission.zip /mnt/c/Users/<windows-user>/Downloads/
+```
+
+This creates `/home/<user>/CN_Local_Mail_System_Submission.zip`.
 
 ## 11. Stop and restart
 
-Stop the lab with `make down`. A clean restart is `make down`, `make up`, and `make test`.
+Stop the lab or perform a clean restart with:
+
+```bash
+make down
+make up
+make test
+```
 
 ## 12. Troubleshooting
 
 For Docker permission errors, run `sudo service docker start`, ensure the user is in the `docker` group, and reopen Ubuntu.
 
-For missing `ensurepip`, run `sudo apt install -y python3-venv python3.12-venv`, `rm -rf venv`, and `python3 tools/lab.py build`.
+For missing `ensurepip`, run:
 
-For empty captures, run `sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap`, `sudo ip netns exec clab-mail-r1 tshark -D`, `make down`, `make up`, and `make capture`.
+```bash
+sudo apt install -y python3-venv python3.12-venv
+rm -rf venv
+make build
+```
 
-For DNS, routing or mail failures, run `make down`, `make up`, and `make test`. If Windows edits appear stale, edit the `/home` copy with VS Code or explicitly copy files from `/mnt/c`.
+For empty captures, run:
+
+```bash
+sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap
+sudo ip netns exec clab-mail-r1 tshark -D
+make down
+make up
+make capture
+```
+
+For DNS, routing or mail failures, run:
+
+```bash
+make down
+make up
+make test
+```
+
+If Windows edits appear stale, edit the `/home` copy with VS Code or explicitly copy files from `/mnt/c`.
 
 ## 13. Project map
 
@@ -98,18 +193,26 @@ The Dockerfile and Containerlab YAML remain because they are native inputs to th
 
 ## 14. Fresh-install command sequence
 
-For a new Ubuntu WSL installation, the shortest complete sequence is:
+For a new Ubuntu WSL installation, install WSL, Docker, the dependencies and
+Containerlab first. Then run this project workflow from the repository root:
 
-1. Install Ubuntu 24.04 WSL 2 from PowerShell.
-2. Install Docker and add the user to the `docker` group.
-3. Reopen Ubuntu and start Docker.
-4. Install the dependency list and Containerlab.
-5. Set `dumpcap` capabilities.
-6. Clone the repository into `/home`.
-7. Run `python3 tools/lab.py build`.
-8. Run `make doctor`.
-9. Run `make up`.
-10. Run `make test` and confirm `45/45 checks passed`.
+```bash
+cd ~/local-mail-system
+make build
+make doctor
+make up
+make test
+```
 
-After that, use `make demo`, `make experiments`, `make tables`, `make capture`,
-`make evidence`, `make check`, and `make package` as needed.
+Confirm `45/45 checks passed`. After that, use these targets as needed:
+
+```bash
+make demo
+make experiments
+make tables
+make capture
+make evidence
+make check
+make package
+make down
+```

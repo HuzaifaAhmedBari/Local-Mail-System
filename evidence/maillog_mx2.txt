@@ -1,0 +1,55 @@
+Nov 24 17:26:53 mx2 postfix/postfix-script[105]: starting the Postfix mail system
+Nov 24 17:26:53 mx2 postfix/master[107]: daemon started -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:26:57 mx2 postfix/smtpd[117]: connect from mx2.beta.test[10.10.3.26]
+Nov 24 17:26:57 mx2 postfix/smtpd[117]: lost connection after CONNECT from mx2.beta.test[10.10.3.26]
+Nov 24 17:26:57 mx2 postfix/smtpd[117]: disconnect from mx2.beta.test[10.10.3.26] commands=0/0
+Nov 24 17:27:05 mx2 postfix/smtpd[117]: connect from unknown[10.10.1.10]
+Nov 24 17:27:05 mx2 postfix/smtpd[117]: lost connection after CONNECT from unknown[10.10.1.10]
+Nov 24 17:27:05 mx2 postfix/smtpd[117]: disconnect from unknown[10.10.1.10] commands=0/0
+Nov 24 17:27:05 mx2 postfix/smtpd[117]: connect from unknown[10.10.1.10]
+Nov 24 17:27:05 mx2 postfix/smtpd[117]: lost connection after CONNECT from unknown[10.10.1.10]
+Nov 24 17:27:05 mx2 postfix/smtpd[117]: disconnect from unknown[10.10.1.10] commands=0/0
+Nov 24 17:27:15 mx2 postfix/postfix-script[134]: refreshing the Postfix mail system
+Nov 24 17:27:15 mx2 postfix/master[107]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:15 mx2 postfix/anvil[120]: statistics: max connection rate 2/60s for (smtp:10.10.1.10) at Nov 24 17:27:05
+Nov 24 17:27:15 mx2 postfix/anvil[120]: statistics: max connection count 1 for (smtp:10.10.3.26) at Nov 24 17:26:57
+Nov 24 17:27:15 mx2 postfix/anvil[120]: statistics: max cache size 2 at Nov 24 17:27:05
+Nov 24 17:27:16 mx2 postfix/postsuper[141]: Deleted: 0 messages
+Nov 24 17:27:17 mx2 postfix/postsuper[147]: Deleted: 0 messages
+Nov 24 17:27:17 mx2 postfix/smtpd[153]: connect from mail.alpha.test[10.10.1.25]
+Nov 24 17:27:17 mx2 postfix/smtpd[153]: DA93F24DF1: client=mail.alpha.test[10.10.1.25]
+Nov 24 17:27:17 mx2 postfix/cleanup[157]: DA93F24DF1: message-id=<20261124172717.000105@clienta>
+Nov 24 17:27:17 mx2 postfix/smtpd[153]: disconnect from mail.alpha.test[10.10.1.25] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+Nov 24 17:27:17 mx2 postfix/qmgr[139]: DA93F24DF1: from=<alice@alpha.test>, size=1098, nrcpt=1 (queue active)
+Nov 24 17:27:17 mx2 postfix/smtp[158]: connect to 10.10.2.25[10.10.2.25]:25: Connection refused
+Nov 24 17:27:17 mx2 postfix/smtp[158]: DA93F24DF1: to=<bob@beta.test>, relay=none, delay=0.03, delays=0.02/0.01/0/0, dsn=4.4.1, status=deferred (connect to 10.10.2.25[10.10.2.25]:25: Connection refused)
+Nov 24 17:27:21 mx2 postfix/qmgr[139]: DA93F24DF1: from=<alice@alpha.test>, size=1098, nrcpt=1 (queue active)
+Nov 24 17:27:21 mx2 postfix/smtp[158]: DA93F24DF1: to=<bob@beta.test>, relay=10.10.2.25[10.10.2.25]:25, delay=3.7, delays=3.5/0/0.02/0.17, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 7996524DF6)
+Nov 24 17:27:21 mx2 postfix/qmgr[139]: DA93F24DF1: removed
+Nov 24 17:27:21 mx2 postfix/postsuper[175]: Deleted: 0 messages
+Nov 24 17:27:22 mx2 postfix/postsuper[181]: Deleted: 0 messages
+Nov 24 17:27:22 mx2 postfix/postfix-script[198]: stopping the Postfix mail system
+Nov 24 17:27:23 mx2 postfix/postfix-script[284]: starting the Postfix mail system
+Nov 24 17:27:23 mx2 postfix/master[286]: daemon started -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:28 mx2 postfix/postfix-script[301]: fatal: the Postfix mail system is already running
+Nov 24 17:27:38 mx2 postfix/postfix-script[315]: refreshing the Postfix mail system
+Nov 24 17:27:38 mx2 postfix/master[286]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:47 mx2 postfix/postfix-script[334]: refreshing the Postfix mail system
+Nov 24 17:27:47 mx2 postfix/master[286]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:57 mx2 postfix/postfix-script[354]: refreshing the Postfix mail system
+Nov 24 17:27:57 mx2 postfix/master[286]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:58 mx2 postfix/postsuper[361]: Deleted: 0 messages
+Nov 24 17:28:07 mx2 postfix/postfix-script[381]: refreshing the Postfix mail system
+Nov 24 17:28:07 mx2 postfix/master[286]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:28:07 mx2 postfix/postsuper[387]: Deleted: 0 messages
+Nov 24 17:28:15 mx2 postfix/postfix-script[407]: refreshing the Postfix mail system
+Nov 24 17:28:15 mx2 postfix/master[286]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:28:19 mx2 postfix/postsuper[413]: Deleted: 0 messages
+Nov 24 17:28:20 mx2 postfix/postsuper[420]: Deleted: 0 messages
+Nov 24 17:28:21 mx2 postfix/postsuper[426]: Deleted: 0 messages
+Nov 24 17:28:22 mx2 postfix/postsuper[432]: Deleted: 0 messages
+Nov 24 17:28:22 mx2 postfix/postsuper[438]: Deleted: 0 messages
+Nov 24 17:28:34 mx2 postfix/postsuper[444]: Deleted: 0 messages
+Nov 24 17:28:34 mx2 postfix/postsuper[450]: Deleted: 0 messages
+Nov 24 17:28:46 mx2 postfix/postfix-script[469]: refreshing the Postfix mail system
+Nov 24 17:28:46 mx2 postfix/master[286]: reload -- version 3.8.6, configuration /etc/postfix

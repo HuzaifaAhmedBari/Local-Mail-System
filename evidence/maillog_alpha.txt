@@ -1,0 +1,80 @@
+Nov 24 17:27:27 mail postfix/smtp[285]: C962A24DFD: to=<bob@beta.test>, relay=mail.beta.test[10.10.2.25]:25, delay=4.2, delays=4/0/0.02/0.18, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as E0BFF24E01)
+Nov 24 17:27:27 mail postfix/qmgr[269]: C962A24DFD: removed
+Nov 24 17:27:34 mail postfix/postfix-script[360]: refreshing the Postfix mail system
+Nov 24 17:27:34 mail postfix/master[118]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:34 mail postfix/anvil[279]: statistics: max connection rate 4/60s for (submission:10.10.1.10) at Nov 24 17:27:22
+Nov 24 17:27:34 mail postfix/anvil[279]: statistics: max connection count 1 for (submission:10.10.1.10) at Nov 24 17:27:16
+Nov 24 17:27:34 mail postfix/anvil[279]: statistics: max cache size 1 at Nov 24 17:27:16
+Nov 24 17:27:41 mail postfix/postfix-script[385]: refreshing the Postfix mail system
+Nov 24 17:27:41 mail postfix/master[118]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:48 mail postfix/smtpd[391]: connect from unknown[10.10.1.10]
+Nov 24 17:27:48 mail postfix/smtpd[391]: Anonymous TLS connection established from unknown[10.10.1.10]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:27:48 mail postfix/smtpd[391]: lost connection after STARTTLS from unknown[10.10.1.10]
+Nov 24 17:27:48 mail postfix/smtpd[391]: disconnect from unknown[10.10.1.10] ehlo=1 starttls=1 commands=2
+Nov 24 17:27:49 mail postfix/smtpd[391]: connect from unknown[10.10.1.10]
+Nov 24 17:27:49 mail postfix/smtpd[391]: disconnect from unknown[10.10.1.10] ehlo=1 quit=1 commands=2
+Nov 24 17:27:51 mail postfix/postfix-script[415]: refreshing the Postfix mail system
+Nov 24 17:27:51 mail postfix/master[118]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:27:51 mail postfix/anvil[395]: statistics: max connection rate 2/60s for (submission:10.10.1.10) at Nov 24 17:27:49
+Nov 24 17:27:51 mail postfix/anvil[395]: statistics: max connection count 1 for (submission:10.10.1.10) at Nov 24 17:27:48
+Nov 24 17:27:51 mail postfix/anvil[395]: statistics: max cache size 1 at Nov 24 17:27:48
+Nov 24 17:27:58 mail postfix/postsuper[422]: Deleted: 0 messages
+Nov 24 17:27:58 mail postfix/smtpd[428]: connect from unknown[10.10.1.10]
+Nov 24 17:27:58 mail postfix/smtpd[428]: CF46424DC4: client=unknown[10.10.1.10], sasl_method=LOGIN, sasl_username=alice
+Nov 24 17:27:58 mail postfix/cleanup[435]: CF46424DC4: message-id=<20261124172758.000147@clienta>
+Nov 24 17:27:58 mail postfix/qmgr[420]: CF46424DC4: from=<alice@alpha.test>, size=418, nrcpt=1 (queue active)
+Nov 24 17:27:58 mail postfix/smtpd[428]: disconnect from unknown[10.10.1.10] ehlo=1 auth=1 mail=1 rcpt=1 data=1 quit=1 commands=6
+Nov 24 17:27:59 mail postfix/smtp[436]: CF46424DC4: to=<bob@beta.test>, relay=mail.beta.test[10.10.2.25]:25, delay=0.31, delays=0.1/0.01/0.02/0.18, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 0DBBE24DFD)
+Nov 24 17:27:59 mail postfix/qmgr[420]: CF46424DC4: removed
+Nov 24 17:28:01 mail postfix/postfix-script[453]: refreshing the Postfix mail system
+Nov 24 17:28:01 mail postfix/master[118]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:28:01 mail postfix/anvil[430]: statistics: max connection rate 1/60s for (submission:10.10.1.10) at Nov 24 17:27:58
+Nov 24 17:28:01 mail postfix/anvil[430]: statistics: max connection count 1 for (submission:10.10.1.10) at Nov 24 17:27:58
+Nov 24 17:28:01 mail postfix/anvil[430]: statistics: max cache size 1 at Nov 24 17:27:58
+Nov 24 17:28:06 mail postfix/smtpd[460]: connect from unknown[10.10.1.10]
+Nov 24 17:28:06 mail postfix/smtpd[460]: disconnect from unknown[10.10.1.10] ehlo=1 quit=1 commands=2
+Nov 24 17:28:06 mail postfix/postsuper[464]: Deleted: 0 messages
+Nov 24 17:28:09 mail postfix/postfix-script[488]: refreshing the Postfix mail system
+Nov 24 17:28:09 mail postfix/master[118]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:28:09 mail postfix/anvil[463]: statistics: max connection rate 1/60s for (submission:10.10.1.10) at Nov 24 17:28:06
+Nov 24 17:28:09 mail postfix/anvil[463]: statistics: max connection count 1 for (submission:10.10.1.10) at Nov 24 17:28:06
+Nov 24 17:28:09 mail postfix/anvil[463]: statistics: max cache size 1 at Nov 24 17:28:06
+Nov 24 17:28:19 mail postfix/postsuper[495]: Deleted: 0 messages
+Nov 24 17:28:19 mail postfix/smtpd[501]: connect from unknown[10.10.1.10]
+Nov 24 17:28:19 mail postfix/smtpd[501]: Anonymous TLS connection established from unknown[10.10.1.10]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:28:19 mail postfix/smtpd[501]: D461C24DFD: client=unknown[10.10.1.10], sasl_method=PLAIN, sasl_username=alice
+Nov 24 17:28:19 mail postfix/cleanup[509]: D461C24DFD: message-id=<A1_1-0-7a62f467@alpha.test>
+Nov 24 17:28:19 mail postfix/qmgr[493]: D461C24DFD: from=<alice@alpha.test>, size=2394, nrcpt=1 (queue active)
+Nov 24 17:28:19 mail postfix/smtpd[501]: disconnect from unknown[10.10.1.10] ehlo=2 starttls=1 auth=1 mail=1 rcpt=1 data=1 quit=1 commands=8
+Nov 24 17:28:20 mail postfix/smtp[510]: Trusted TLS connection established to mail.beta.test[10.10.2.25]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:28:20 mail postfix/smtp[510]: D461C24DFD: to=<bob@beta.test>, relay=mail.beta.test[10.10.2.25]:25, delay=0.33, delays=0.1/0.02/0.04/0.17, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 1841B24E05)
+Nov 24 17:28:20 mail postfix/qmgr[493]: D461C24DFD: removed
+Nov 24 17:28:20 mail postfix/postsuper[511]: Deleted: 0 messages
+Nov 24 17:28:20 mail postfix/postsuper[517]: Deleted: 0 messages
+Nov 24 17:28:21 mail postfix/smtpd[501]: connect from unknown[10.10.1.10]
+Nov 24 17:28:21 mail postfix/smtpd[501]: Anonymous TLS connection established from unknown[10.10.1.10]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:28:21 mail postfix/smtpd[501]: 2F77224DFD: client=unknown[10.10.1.10], sasl_method=PLAIN, sasl_username=alice
+Nov 24 17:28:21 mail postfix/cleanup[509]: 2F77224DFD: message-id=<A3_1-0-9109d220@alpha.test>
+Nov 24 17:28:21 mail postfix/qmgr[493]: 2F77224DFD: from=<alice@alpha.test>, size=2394, nrcpt=1 (queue active)
+Nov 24 17:28:21 mail postfix/smtpd[501]: disconnect from unknown[10.10.1.10] ehlo=2 starttls=1 auth=1 mail=1 rcpt=1 data=1 quit=1 commands=8
+Nov 24 17:28:21 mail postfix/smtp[510]: Trusted TLS connection established to mail.beta.test[10.10.2.25]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:28:21 mail postfix/smtp[510]: 2F77224DFD: to=<bob@beta.test>, relay=mail.beta.test[10.10.2.25]:25, delay=0.2, delays=0.1/0/0.01/0.09, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 49F4324E05)
+Nov 24 17:28:21 mail postfix/qmgr[493]: 2F77224DFD: removed
+Nov 24 17:28:21 mail postfix/postsuper[523]: Deleted: 0 messages
+Nov 24 17:28:22 mail postfix/postsuper[535]: Deleted: 0 messages
+Nov 24 17:28:28 mail postfix/smtpd[501]: connect from unknown[10.10.1.10]
+Nov 24 17:28:28 mail postfix/smtpd[501]: Anonymous TLS connection established from unknown[10.10.1.10]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:28:28 mail postfix/smtpd[501]: 240C824DFD: client=unknown[10.10.1.10], sasl_method=PLAIN, sasl_username=alice
+Nov 24 17:28:28 mail postfix/cleanup[509]: 240C824DFD: message-id=<A4_1-0-33833d75@alpha.test>
+Nov 24 17:28:28 mail postfix/qmgr[493]: 240C824DFD: from=<alice@alpha.test>, size=2394, nrcpt=1 (queue active)
+Nov 24 17:28:28 mail postfix/smtpd[501]: disconnect from unknown[10.10.1.10] ehlo=2 starttls=1 auth=1 mail=1 rcpt=1 data=1 quit=1 commands=8
+Nov 24 17:28:28 mail postfix/smtp[510]: Trusted TLS connection established to mail.beta.test[10.10.2.25]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+Nov 24 17:28:28 mail postfix/smtp[510]: 240C824DFD: to=<bob@beta.test>, relay=mail.beta.test[10.10.2.25]:25, delay=0.15, delays=0.1/0/0.01/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 3D9C724E05)
+Nov 24 17:28:28 mail postfix/qmgr[493]: 240C824DFD: removed
+Nov 24 17:28:34 mail postfix/postsuper[676]: Deleted: 0 messages
+Nov 24 17:28:34 mail postfix/postsuper[682]: Deleted: 0 messages
+Nov 24 17:28:40 mail postfix/postfix-script[770]: refreshing the Postfix mail system
+Nov 24 17:28:40 mail postfix/master[118]: reload -- version 3.8.6, configuration /etc/postfix
+Nov 24 17:28:40 mail postfix/anvil[504]: statistics: max connection rate 3/60s for (submission:10.10.1.10) at Nov 24 17:28:28
+Nov 24 17:28:40 mail postfix/anvil[504]: statistics: max connection count 1 for (submission:10.10.1.10) at Nov 24 17:28:19
+Nov 24 17:28:40 mail postfix/anvil[504]: statistics: max cache size 1 at Nov 24 17:28:19

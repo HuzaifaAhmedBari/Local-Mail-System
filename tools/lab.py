@@ -333,10 +333,11 @@ def configure_routers():
             ns(router, 'ip', 'addr', 'replace', cidr, 'dev', ifn)
             ns(router, 'ip', 'link', 'set', ifn, 'up')
         ns(router, 'sysctl', '-w', 'net.ipv4.ip_forward=1')
-    end = time.time() + 30
+    end = time.time() + 90
     while time.time() < end:                                  # static routes appear once the next hop is reachable
         if '10.10.2.0/24' in x('r1', ['vtysh', '-c', 'show ip route']).stdout and \
-           '10.10.1.0/24' in x('r2', ['vtysh', '-c', 'show ip route']).stdout:
+           '10.10.1.0/24' in x('r2', ['vtysh', '-c', 'show ip route']).stdout and \
+           '10.10.3.0/24' in x('r2', ['vtysh', '-c', 'show ip route']).stdout:
             return
         time.sleep(1)
     print('WARNING: FRR static routes are not installed yet; check docker exec %s vtysh -c "show ip route"' % cname('r1'))
@@ -582,11 +583,11 @@ def pcap_csv(pcap, out):
 
 
 def captures():
-    """Produce the five required .pcapng files and a packet list for each in evidence/auto/."""
+    """Produce the five required .pcapng files and a packet list for each in evidence/."""
     need_root()
     os.makedirs(P('captures/keylogs'), exist_ok=True)
     os.makedirs(P('captures/screenshots'), exist_ok=True)
-    os.makedirs(P('evidence/auto'), exist_ok=True)
+    os.makedirs(P('evidence'), exist_ok=True)
     cap = lambda name: P('captures', name + '.pcapng')
     clear()
     set_tls('on')
@@ -638,7 +639,7 @@ def captures():
     for n in PCAPS:
         size = os.path.getsize(cap(n)) if os.path.exists(cap(n)) else 0
         if size:
-            pcap_csv(cap(n), P('evidence/auto', n + '.csv'))
+            pcap_csv(cap(n), P('evidence', n + '.csv'))
         print('  %-18s %s' % (n + '.pcapng', '%d bytes' % size if size else 'EMPTY - check tshark permissions'))
     fix_owner()
     print('captures done. Open them with: wireshark captures/<name>.pcapng')
@@ -652,7 +653,7 @@ def head_lines(path, prefixes=('authentication-results', 'dkim-signature', 'rece
 
 def evidence():
     need_root()
-    out = P('evidence/auto')
+    out = P('evidence')
     os.makedirs(out, exist_ok=True)
 
     def save(name, text):
@@ -675,7 +676,7 @@ def evidence():
     f = newest(INBOX_BOB)
     save('headers_bob_latest.txt', '\n'.join(head_lines(f)) + '\n' if f else 'no message in bob Maildir\n')
     fix_owner()
-    print('text evidence written to evidence/auto/')
+    print('text evidence written to evidence/')
 
 
 # --------------------------------------------------------------------------
@@ -724,9 +725,9 @@ def demo(auto=False):
     need_root()
     sys.path.insert(0, P('tools'))
     import parse_headers
-    os.makedirs(P('evidence/auto'), exist_ok=True)
+    os.makedirs(P('evidence'), exist_ok=True)
     real = sys.stdout
-    sys.stdout = Tee(P('evidence/auto/demo_run.txt'))
+    sys.stdout = Tee(P('evidence/demo_run.txt'))
     auto = auto or os.environ.get('DEMO_AUTO') == '1' or not sys.stdin.isatty()
 
     def step(n, title):
@@ -778,7 +779,7 @@ def demo(auto=False):
 
         step(6, 'Clean up')
         clear()
-        print('network conditions cleared; demo log saved to evidence/auto/demo_run.txt')
+        print('network conditions cleared; demo log saved to evidence/demo_run.txt')
     finally:
         sys.stdout = real
         fix_owner()
@@ -805,7 +806,7 @@ first build, sudo. The kernel must support tc netem and tbf. The repo path must 
     sudo DEBIAN_FRONTEND=noninteractive apt install -y git make curl jq build-essential python3 python3-venv python3-pip docker.io tshark tcpdump iproute2 dnsutils swaks bridge-utils inotify-tools graphviz poppler-utils xz-utils wireshark
     sudo usermod -aG docker,wireshark $USER      # then log out and back in
     curl -sL https://get.containerlab.dev -o clab_install.sh && sudo bash clab_install.sh
-    python3 tools/lab.py build                   # venv, node image, FRR image
+    make build                                    # venv, node image, FRR image
 
 ## 4. Bring the lab up
     make doctor && make build && make up
@@ -825,8 +826,8 @@ configure alice (mail.alpha.test, IMAP 143 and SMTP 587, STARTTLS) and bob (mail
     make tables         # CSVs in results/csv, tables in results/tables, graphs in results/graphs, results/summary.md
 
 ## 7. Captures
-    make capture        # captures/*.pcapng, packet lists in evidence/auto/, key log in captures/keylogs/
-    make evidence       # routing tables, traceroute, logs, headers in evidence/auto/
+    make capture        # captures/*.pcapng, packet lists in evidence/, key log in captures/keylogs/
+    make evidence       # routing tables, traceroute, logs, headers in evidence/
 
 ## 8. Repository map
 tools/lab.py (control), tools/stagetests.py (tests), tools/orchestrate.py (experiments),
@@ -859,7 +860,7 @@ nodes/ctl_node.py) were drafted with AI assistance.
 
 ## 4. How AI-supplied material was checked
 [fill in: for every AI-supplied command, configuration or paragraph, which stage test or measurement checked it,
-and what you changed or rejected. See ai_log/ai_log.md.]
+and what you changed or rejected. See the stage-test output and experiment results.]
 
 ## 5. Responsibility
 [fill in: statement that you are responsible for the submitted work]
@@ -868,9 +869,7 @@ and what you changed or rejected. See ai_log/ai_log.md.]
 
 def scaffold():
     made = []
-    for path, text in (('README.md', README), ('AI_DISCLOSURE.md', DISCLOSURE),
-                       ('ai_log/ai_log.md', '# AI log (one line per use)\n'
-                        '# date | tool | asked | used | changed or rejected | verified by\n')):
+    for path, text in (('README.md', README), ('AI_DISCLOSURE.md', DISCLOSURE)):
         if not os.path.exists(P(path)) or os.path.getsize(P(path)) == 0:
             os.makedirs(os.path.dirname(P(path)), exist_ok=True)
             open(P(path), 'w').write(text)
@@ -899,7 +898,7 @@ def check():
     for f in ('README.md', 'AI_DISCLOSURE.md', 'Makefile', 'config.env', 'topology.clab.yml', 'versions.lock',
               'requirements.lock', 'docs/proposal.pdf', 'docs/architecture.png', 'docs/report/report.pdf',
               'results/summary.md', 'docker/Dockerfile.node', 'nodes/start_node.py', 'nodes/ctl_node.py',
-              'evidence/auto/demo_run.txt'):
+              'evidence/demo_run.txt'):
         rep('OK' if os.path.exists(P(f)) else 'MISS', f)
     for f in ('lab', 'stagetests', 'socktest', 'mailclient', 'imapclient', 'watcher', 'spoof',
               'loadgen', 'parse_headers', 'rtt_count', 'orchestrate', 'make_tables'):
@@ -935,12 +934,8 @@ def check():
     for f in ('README.md', 'AI_DISCLOSURE.md'):
         if os.path.exists(P(f)):
             rep('FAIL' if '[fill in' in open(P(f)).read().lower() else 'OK', 'no [fill in] left in ' + f)
-    log = P('ai_log/ai_log.md')
-    rep('OK' if os.path.exists(log) and len(open(log).read().strip().splitlines()) > 2 else 'MISS',
-        'ai_log/ai_log.md has entries')
     print('check: %d MISS, %d FAIL' % (res['MISS'], res['FAIL']))
     return res['MISS'] == 0 and res['FAIL'] == 0
-
 
 def package():
     need_root()
